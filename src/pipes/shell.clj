@@ -50,7 +50,7 @@
 
    Example: `(run-process [\"ls\" \"-al\" \"*\"] :handle-quoting? false)`
 
-   Returns a job (see `node.job`). The result of derefing the job is a hashmap along the lines of:
+   Returns a job (see `pipes.job`). The result of derefing the job is a hashmap along the lines of:
    `{:exit 0 :out \"This is output\" :err nil}`"
   [args & [{on-error :on-error :or {on-error default-error-handler} :as opts}]]
   (fn [in out]

@@ -34,7 +34,7 @@
 (defn ->pipe->
   "Pipe data from `in` through `jobs` to `out`.
    In addition, the user can define one or more callbacks: :cancel :success :error :finally.
-   Returns a job (see `node.job`)"
+   Returns a job (see `pipes.job`)"
   [^InputStream in jobs ^OutputStream out & {:keys [cancel success error finally]
                                              :or   {cancel #() success #() error identity finally #()}}]
   (let [pipes (->> (repeatedly make-connected-pipes)
@@ -65,14 +65,14 @@
 (defn pipe->
   "Pipe data from `jobs` to `out` with the first job being the source of data.
    In addition, the user can define one or more callbacks: :cancel :success :error :finally.
-   Returns a job (see `node.job`)"
+   Returns a job (see `pipes.job`)"
   [jobs ^OutputStream out & opts]
   (apply ->pipe-> (ioh/null-input-stream) jobs out opts))
 
 (defn ->pipe
   "Pipe data from `in` all the way through `jobs` with the last job being the consumer of the data.
    In addition, the user can define one or more callbacks: :cancel :success :error :finally.
-   Returns a job (see `node.job`)"
+   Returns a job (see `pipes.job`)"
   [^InputStream in jobs & opts]
   (apply ->pipe-> in jobs (ioh/null-output-stream) opts))
 
