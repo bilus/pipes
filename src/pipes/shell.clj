@@ -59,9 +59,9 @@
           promise (exec/sh args (merge {:shutdown true
                                         :watchdog watchdog
                                         :in in
-                                        :close-in? true
+                                        :close-in? false
                                         :out out
-                                        :close-out? true} opts))]
+                                        :close-out? false} opts))]
       (j/job-ctl
        {:invoke-fn      #(do (reset! aborted true)
                              (ignore-exception TimeoutException

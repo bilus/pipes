@@ -89,4 +89,63 @@
   [^InputStream in jobs & opts]
   (apply ->pipe-> in jobs (null-output-stream) opts))
 
-;; TODO: Macros to make the interface compatible with `node.pipeline`.
+(defmacro ->job->
+  "Create a new thread that reads from input stream, does some processing and writes to "
+  [[^InputStream in ^OutputStream out] & body]
+  `(fn [~in ~out]
+     (j/job
+      ~@body)))
+
+
+
+
+(comment
+  (pipe-> [(shell ["ls"])
+           (shell ["grep .clj"])]
+          (output-stream "mydb_backup.enc"))
+
+  (pipe-> [(shell ["pg_dump mydb"])
+           (fn [in out]
+             (job (encrypt in out "public_key.asc")))]
+          (output-stream "mydb_backup.enc"))
+
+  (def j (pipe-> ...))
+  (j)           ;; 1.
+  (realized? j) ;; 2
+  @j            ;; 3.
+
+  (macroexpand-1 '(->job-> [a b] (println a b)))
+
+  (defmacro x
+    [[in out] & body]
+    `(fn [~in ~out]
+       ~@body))
+
+  (macroexpand-1 '(x [a b] (println a b)))
+
+  (let [a 4]
+    ((x [a b] (println a b)) 5 6)
+    (println a))
+
+  (with-open [in (io/input-stream "Readme.MD")
+              out (io/output-stream "/tmp/Readme.MD")]
+    (->pipe-> in
+              [(->job-> [in out] (io/copy in out))]
+              out))
+
+  (with-open [out (output-stream "output.txt")]
+    (->pipe-> [(exec ["grep" "clojure"])]
+              out))
+  (with-open [in  (input-stream  "README.md")
+              out (output-stream "line_count.txt")]
+    (->pipe-> [(exec ["grep" "clojure"])
+               (exec ["wc" "-l"])]
+              out))
+
+  (with-open [out (output-stream "mydb_backup.enc")]
+    (pipe-> [(shell ["pg_dump mydb"])
+             (->job-> [in out]
+                      (encrypt in out "mypassword123"))]
+            out))
+
+  )
