@@ -1,4 +1,4 @@
-(defproject pipes "0.1.0-SNAPSHOT"
+(defproject pipes "0.1.0"
   :description "FIXME: write description"
   :url "https://github.com/bilus/pipes"
   :license {:name "Eclipse Public License"

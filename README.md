@@ -14,12 +14,27 @@ then this library gives you a power to do this in Clojure and a lot more.
 
 - Composable pipelines of shell processes, local threads and custom jobs.
 - Cancel the entire pipeline.
-- Terminate the entire pipeline if one of jobs fails.
+- Terminates the entire pipeline if one of jobs fails.
 - Block to wait for result or use callbacks.
 - Success/error/cancel callbacks.
 - Finalizer callbacks (similar to `finally` for `try`).
 
-## Quick example
+## Usage
+
+Add `pipes` to `:dependencies` in project.clj:
+
+[![Clojars Project](http://clojars.org/pipes/latest-version.svg?2394892384)](http://clojars.org/pipes)
+
+Use `pipes.core` for core functions and macros and `pipes.shell` for the `exec` function.
+
+The examples below assume:
+
+```clojure
+(require '[pipes.core :refer [->pipe pipe-> ->pipe-> ->job->]]
+         '[pipes.shell :refer [exec]])
+```
+
+## Quick start
 
 Pipe the contents of a readme through `grep` to find lines with word "clojure" then pipes
 the lines through `wc` to count them. To make the example simple, the result is written
@@ -86,24 +101,22 @@ It's a future object with a bit of extra functionality:
 
 ## TODO
 
-+ NullOutputStream
-
 - Readme
   - Pipe functions.
-  - Shell
+  - Shell exec
+    - Custom exit codes.
   - Futures
   - Cancellation
-  - Promises
+  - Blocking
+  - IO helpers.
   - Custom jobs via job-ctl
   - Composing jobs
   - Job trees.
-  
-- from-string
-- to-string (?)
+
+
 
 ## License
 
-Copyright © 2015 Designed.ly, Marcin Bilski
+Copyright © 2015 Marcin Bilski, Designed.ly
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the Eclipse Public License either version 1.0 or any later version.
