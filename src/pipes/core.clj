@@ -1,9 +1,9 @@
 (ns pipes.core
   "Cancellable asynchronous jobs linked by pipes."
   (:require [clojure.java.io :as io]
-            [pipes.job :as j])
+            [pipes.job :as j]
+            [pipes.io-helpers :as ioh])
   (:import [java.io PipedOutputStream PipedInputStream
-            ByteArrayInputStream
             Closeable InputStream OutputStream]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -27,19 +27,6 @@
       (j/job
         (throw e)))))
 
-(defn null-input-stream
-  "Creates an input stream containing no data."
-  []
-  (ByteArrayInputStream. (byte-array 0)))
-
-(defn null-output-stream
-  "Creates an output stream that discards anything written to it."
-  []
-  (proxy
-    [OutputStream] []
-    (close [])
-    (flush [])
-    (write ([_]) ([_ _ _]))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Public
@@ -80,14 +67,14 @@
    In addition, the user can define one or more callbacks: :cancel :success :error :finally.
    Returns a job (see `node.job`)"
   [jobs ^OutputStream out & opts]
-  (apply ->pipe-> (null-input-stream) jobs out opts))
+  (apply ->pipe-> (ioh/null-input-stream) jobs out opts))
 
 (defn ->pipe
   "Pipe data from `in` all the way through `jobs` with the last job being the consumer of the data.
    In addition, the user can define one or more callbacks: :cancel :success :error :finally.
    Returns a job (see `node.job`)"
   [^InputStream in jobs & opts]
-  (apply ->pipe-> in jobs (null-output-stream) opts))
+  (apply ->pipe-> in jobs (ioh/null-output-stream) opts))
 
 (defmacro ->job->
   "Create a new thread that reads from input stream, does some processing and writes to "
@@ -96,56 +83,3 @@
      (j/job
       ~@body)))
 
-
-
-
-(comment
-  (pipe-> [(shell ["ls"])
-           (shell ["grep .clj"])]
-          (output-stream "mydb_backup.enc"))
-
-  (pipe-> [(shell ["pg_dump mydb"])
-           (fn [in out]
-             (job (encrypt in out "public_key.asc")))]
-          (output-stream "mydb_backup.enc"))
-
-  (def j (pipe-> ...))
-  (j)           ;; 1.
-  (realized? j) ;; 2
-  @j            ;; 3.
-
-  (macroexpand-1 '(->job-> [a b] (println a b)))
-
-  (defmacro x
-    [[in out] & body]
-    `(fn [~in ~out]
-       ~@body))
-
-  (macroexpand-1 '(x [a b] (println a b)))
-
-  (let [a 4]
-    ((x [a b] (println a b)) 5 6)
-    (println a))
-
-  (with-open [in (io/input-stream "Readme.MD")
-              out (io/output-stream "/tmp/Readme.MD")]
-    (->pipe-> in
-              [(->job-> [in out] (io/copy in out))]
-              out))
-
-  (with-open [out (output-stream "output.txt")]
-    (->pipe-> [(exec ["grep" "clojure"])]
-              out))
-  (with-open [in  (input-stream  "README.md")
-              out (output-stream "line_count.txt")]
-    (->pipe-> [(exec ["grep" "clojure"])
-               (exec ["wc" "-l"])]
-              out))
-
-  (with-open [out (output-stream "mydb_backup.enc")]
-    (pipe-> [(shell ["pg_dump mydb"])
-             (->job-> [in out]
-                      (encrypt in out "mypassword123"))]
-            out))
-
-  )
