@@ -1,5 +1,5 @@
-(defproject bilus/pipes "0.1.1-SNAPSHOT"
-  :description "FIXME: write description"
+(defproject bilus/pipes "0.1.1"
+  :description "A Clojure library that lets you chain processes and threads via pipes."
   :url "https://github.com/bilus/pipes"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
