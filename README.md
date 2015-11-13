@@ -1,6 +1,6 @@
 # pipes
 
-** The documentation is work in progress; there's no API reference yet, but look at doc-strings in the source code. **
+**The documentation is work in progress; there's no API reference yet, but look at doc-strings in the source code.**
 
 A Clojure library that lets you chain processes and threads via pipes. It has been well tested in production.
 
