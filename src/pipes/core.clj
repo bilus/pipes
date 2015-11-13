@@ -77,7 +77,7 @@
   (apply ->pipe-> in jobs (ioh/null-output-stream) opts))
 
 (defmacro ->job->
-  "Create a new thread that reads from input stream, does some processing and writes to "
+  "Create a new thread that reads from input stream, does some processing and writes to the output stream."
   [[^InputStream in ^OutputStream out] & body]
   `(fn [~in ~out]
      (j/job
