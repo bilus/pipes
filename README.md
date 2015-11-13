@@ -23,7 +23,7 @@ then this library gives you a power to do this in Clojure and a lot more.
 
 Add `pipes` to `:dependencies` in project.clj:
 
-[![Clojars Project](http://clojars.org/pipes/latest-version.svg?2394892384)](http://clojars.org/pipes)
+[![Clojars Project](http://clojars.org/bilus/pipes/latest-version.svg?2394892384)](http://clojars.org/bilus/pipes)
 
 Use `pipes.core` for core functions and macros and `pipes.shell` for the `exec` function.
 
