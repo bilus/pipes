@@ -25,7 +25,7 @@ then this library gives you a power to do this in Clojure and a lot more.
 
 Add `pipes` to `:dependencies` in project.clj:
 
-[![Clojars Project](http://clojars.org/bilus/pipes/latest-version.svg?2394892384)](http://clojars.org/bilus/pipes)
+[![Clojars Project](http://clojars.org/bilus/pipes/latest-version.svg?2333394892384)](http://clojars.org/bilus/pipes)
 
 Use `pipes.core` for core functions and macros and `pipes.shell` for the `exec` function.
 
@@ -44,13 +44,13 @@ a file, but `out` can be any output stream.
 
 ```clojure
 (with-open [in  (input-stream  "README.md")             ; (1)
-            out (output-stream "line_count.txt")]        
+            out (output-stream "line_count.txt")]
     (->pipe->                                           ; (2)
       in
       [(exec ["grep" "clojure"])                        ; (3)
-       (exec ["wc" "-l"])]                              
-      out))                                               
-```        
+       (exec ["wc" "-l"])]
+      out))
+```
 
 (1) We need to close the input and output streams. Any intermediate streams are managed by the library itself.
 
@@ -73,7 +73,7 @@ we can dump our 10GB Postgres database and encrypt it on the fly like this:
 
 (1) We need to close the output stream `out` because we own it. Intermediate streams are managed by the library itself.
 
-(2) Because `pg_dump` doesn't need to read from standard input, we use `pipe->` instead of `->pipe->` we needed above. 
+(2) Because `pg_dump` doesn't need to read from standard input, we use `pipe->` instead of `->pipe->` we needed above.
 
 (3) The `exec` function in included in this library.
 
@@ -84,7 +84,7 @@ Note that encryption happens on the fly; as `pg_dump` writes to its standard out
 
 The example project TODO shows how to use the excellent nippy library to easily encrypt on the fly.
 
-What can you do with the return value? 
+What can you do with the return value?
 
 ```clojure
   (def j (pipe-> ...))
