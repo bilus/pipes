@@ -61,7 +61,7 @@
                                         :in in
                                         :close-in? false
                                         :out out
-                                        :close-out? false} opts))]
+                                        :close-out? true} opts))]
       (j/job-ctl
        {:invoke-fn      #(do (reset! aborted true)
                              (ignore-exception TimeoutException

@@ -1,4 +1,4 @@
-(defproject bilus/pipes "0.1.1"
+(defproject bilus/pipes "0.1.2"
   :description "A Clojure library that lets you chain processes and threads via pipes."
   :url "https://github.com/bilus/pipes"
   :license {:name "Eclipse Public License"
